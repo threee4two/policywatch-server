@@ -11,7 +11,7 @@
            l.indexOf('data:application/pdf') > -1;
   }
 
-  function ping(link) {
+ function ping(link) {
     var data = {
       school_id: schoolId,
       document_url: link.href.indexOf('data:') === 0 ? 'embedded-pdf' : link.href,
@@ -19,16 +19,12 @@
       page_url: window.location.href,
       timestamp: new Date().toISOString()
     };
-    if (navigator.sendBeacon) {
-      navigator.sendBeacon(serverUrl, new Blob([JSON.stringify(data)], { type: 'application/json' }));
-    } else {
-      fetch(serverUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-        keepalive: true
-      }).catch(function(){});
-    }
+    fetch(serverUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+      credentials: 'omit'
+    }).catch(function(){});
   }
 
   function attach() {
