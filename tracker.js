@@ -1,6 +1,6 @@
 (function() {
   var schoolId = new URLSearchParams(document.currentScript.src.split('?')[1]).get('id');
-  var serverUrl = 'https://policywatch-server.railway.app/track';
+  var serverUrl = 'https://policywatch-server-production.up.railway.app/track';
 
   function isDoc(href) {
     if (!href) return false;
