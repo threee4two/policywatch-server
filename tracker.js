@@ -5,14 +5,17 @@
   function isDoc(href) {
     if (!href) return false;
     var l = href.toLowerCase();
-    return l.indexOf('.pdf') > -1 || l.indexOf('.doc') > -1 || l.indexOf('.docx') > -1;
+    return l.indexOf('.pdf') > -1 || 
+           l.indexOf('.doc') > -1 || 
+           l.indexOf('.docx') > -1 ||
+           l.indexOf('data:application/pdf') > -1;
   }
 
   function ping(link) {
     var data = {
       school_id: schoolId,
-      document_url: link.href,
-      document_name: link.innerText.trim() || link.title || 'Policy Document',
+      document_url: link.href.indexOf('data:') === 0 ? 'embedded-pdf' : link.href,
+      document_name: link.innerText.trim() || link.title || link.download || 'Policy Document',
       page_url: window.location.href,
       timestamp: new Date().toISOString()
     };
@@ -51,4 +54,5 @@
       });
     });
   }).observe(document.body, { childList: true, subtree: true });
+
 })();
