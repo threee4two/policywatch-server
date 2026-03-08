@@ -1,0 +1,54 @@
+(function() {
+  var schoolId = new URLSearchParams(document.currentScript.src.split('?')[1]).get('id');
+  var serverUrl = 'https://policywatch-server.railway.app/track';
+
+  function isDoc(href) {
+    if (!href) return false;
+    var l = href.toLowerCase();
+    return l.indexOf('.pdf') > -1 || l.indexOf('.doc') > -1 || l.indexOf('.docx') > -1;
+  }
+
+  function ping(link) {
+    var data = {
+      school_id: schoolId,
+      document_url: link.href,
+      document_name: link.innerText.trim() || link.title || 'Policy Document',
+      page_url: window.location.href,
+      timestamp: new Date().toISOString()
+    };
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon(serverUrl, new Blob([JSON.stringify(data)], { type: 'application/json' }));
+    } else {
+      fetch(serverUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+        keepalive: true
+      }).catch(function(){});
+    }
+  }
+
+  function attach() {
+    document.querySelectorAll('a[href]').forEach(function(link) {
+      if (isDoc(link.href)) link.addEventListener('click', function() { ping(link); });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', attach);
+  } else {
+    attach();
+  }
+
+  new MutationObserver(function(mutations) {
+    mutations.forEach(function(mut) {
+      mut.addedNodes.forEach(function(node) {
+        if (node.querySelectorAll) {
+          node.querySelectorAll('a[href]').forEach(function(link) {
+            if (isDoc(link.href)) link.addEventListener('click', function() { ping(link); });
+          });
+        }
+      });
+    });
+  }).observe(document.body, { childList: true, subtree: true });
+})();
