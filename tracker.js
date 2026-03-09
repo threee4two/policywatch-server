@@ -1,6 +1,6 @@
 (function() {
   var schoolId = new URLSearchParams(document.currentScript.src.split('?')[1]).get('id');
- var serverUrl = 'http://185.151.29.142:3000/track';
+var serverUrl = 'http://185.151.29.142:3000/track';
 
   function isDoc(href) {
     if (!href) return false;
