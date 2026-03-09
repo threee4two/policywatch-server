@@ -1,6 +1,6 @@
 (function() {
   var schoolId = new URLSearchParams(document.currentScript.src.split('?')[1]).get('id');
-var serverUrl = 'http://server.chertionlandscapes.co.uk/track';
+var serverUrl = 'https://server.chertionlandscapes.co.uk/track';
 
   function isDoc(href) {
     if (!href) return false;
